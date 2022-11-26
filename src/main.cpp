@@ -13,24 +13,23 @@ void runningString(String textToPrint){
   mtrx.clear();
 }
 void setup() {
-  mtrx.begin();       // запускаем
-  mtrx.setBright(2);  // яркость 0..15
+  mtrx.begin();       // ?????????
+  mtrx.setBright(2);  // ??????? 0..15
   mtrx.setScale(1);
-
+  int x = 194;
+  char y = x;
+  // mtrx.println(y);
+  mtrx.write(y);
+  mtrx.update(); 
   Serial.begin(115200);
-  //mtrx.setRotation(1);   // можно повернуть 0..3, по 90 град по часовой стрелке
-
-  // mtrx.line(0, 0, 31, 7);  // (x0, y0, x1, y1)
-  // mtrx.line(0, 7, 31, 0);
-  // mtrx.setScale();
-  // mtrx.setCursor(-5,0);
-  // runingString("qwertyuiop");  
-  // delay(1000);
-  // mtrx.clear();
+  //mtrx.setRotation(1);   // ????? ????????? 0..3, ?? 90 ???? ?? ??????? ???????
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   // runingString("School number 12"); 
-  runningString("Привiт я їбанувася та пишу букву ґ та є "); 
+  // runningString("000qwe 00000 qwe"); 
+  int x = '?';
+  char y = x;
+  Serial.println(y,DEC);
+  //? 53655 A-144 ?-143
 }
