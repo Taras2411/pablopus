@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <GyverMAX7219.h>
 MAX7219 < 4, 1, D6, D7, D8 > mtrx;
-void runingString(String textToPrint){
+void runningString(String textToPrint){
   int length = strlen(textToPrint.c_str());\
   Serial.println(length);
   for(int i = 0; i<(length*5+length-1+31);i++){
@@ -32,5 +32,5 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   // runingString("School number 12"); 
-  runingString("Привiт я їбанувася та пишу букву ґ та є "); 
+  runningString("Привiт я їбанувася та пишу букву ґ та є "); 
 }
