@@ -1,35 +1,65 @@
 #include <Arduino.h>
-#include <GyverMAX7219.h>
-MAX7219 < 4, 1, D6, D7, D8 > mtrx;
-void runningString(String textToPrint){
-  int length = strlen(textToPrint.c_str());\
-  Serial.println(length);
-  for(int i = 0; i<(length*5+length-1+31);i++){
-    mtrx.setCursor(31-i,0);
-    mtrx.println(textToPrint);
-    mtrx.update(); 
-    delay(80);
-  }
-  mtrx.clear();
-}
-void setup() {
-  mtrx.begin();       // ?????????
-  mtrx.setBright(2);  // ??????? 0..15
-  mtrx.setScale(1);
-  int x = 194;
-  char y = x;
-  // mtrx.println(y);
-  mtrx.write(y);
-  mtrx.update(); 
-  Serial.begin(115200);
-  //mtrx.setRotation(1);   // ????? ????????? 0..3, ?? 90 ???? ?? ??????? ???????
+
+// MAX7219 < 4, 1, D6, D7, D8 > mtrx;
+#include <SPI.h>
+#include <Adafruit_GFX.h>
+#include <Max72xxPanel.h>
+
+int pinCS = D1; // Attach CS to this pin, DIN to MOSI and CLK to SCK (cf http://arduino.cc/en/Reference/SPI )
+int numberOfHorizontalDisplays = 4;
+int numberOfVerticalDisplays = 1;
+
+Max72xxPanel matrix = Max72xxPanel(pinCS, numberOfHorizontalDisplays, numberOfVerticalDisplays);
+
+String tape = "I HATE HARDWARE SPI";
+int wait = 25; // In milliseconds
+
+int spacer = 1;
+int width = 5 + spacer; // The font width is 5 pixels
+
+void setup()
+{
+
+  matrix.setIntensity(7); // Use a value between 0 and 15 for brightness
+
+  // Adjust to your own needs
+  matrix.setPosition(0, 0, 0); // The first display is at <0, 0>
+  matrix.setPosition(1, 1, 0); // The second display is at <1, 0>
+  matrix.setPosition(2, 2, 0); // The third display is at <2, 0>
+  matrix.setPosition(3, 3, 0); // And the last display is at <3, 0>
+
+  matrix.setRotation(0, 1);    // The first display is position upside down
+  matrix.setRotation(1, 1);    // The first display is position upside down
+  matrix.setRotation(2, 1);    // The first display is position upside down
+  matrix.setRotation(3, 1);    // The first display is position upside down
+  //  matrix.setRotation(3, 2);    // The same hold for the last display
 }
 
-void loop() {
-  // runingString("School number 12"); 
-  // runningString("000qwe 00000 qwe"); 
-  int x = '?';
-  char y = x;
-  Serial.println(y,DEC);
-  //? 53655 A-144 ?-143
+void loop()
+{
+
+  for (int i = 0; i < width * tape.length() + matrix.width() - 1 - spacer; i++)
+  {
+
+    matrix.fillScreen(LOW);
+
+    int letter = i / width;
+    int x = (matrix.width() - 1) - i % width;
+    int y = (matrix.height() - 8) / 2; // center the text vertically
+
+    while (x + width - spacer >= 0 && letter >= 0)
+    {
+      if (letter < tape.length())
+      {
+        matrix.drawChar(x, y, tape[letter], HIGH, LOW, 1);
+      }
+
+      letter--;
+      x -= width;
+    }
+
+    matrix.write(); // Send bitmap to display
+
+    delay(wait);
+  }
 }
